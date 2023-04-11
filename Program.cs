@@ -50,6 +50,8 @@ builder.Services.AddScoped<IRepository<DimensionTextile>, DimensionTextileReposi
 
 
 //add the unit of work
+
+builder.Services.AddCors();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
@@ -62,7 +64,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseCors(x => x.WithOrigins("https://localhost:3000"));
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
