@@ -86,9 +86,9 @@ namespace Group1_5_FagelGamous.Controllers
         {
             try
             {
-                UOW.BurialMain.Add(b);
+                var addedBurialMain = UOW.BurialMain.Add(b);
                 UOW.Complete();
-                return Ok();
+                return Ok(addedBurialMain);
             }
             catch
             {
@@ -96,18 +96,26 @@ namespace Group1_5_FagelGamous.Controllers
             }
         }
 
-        //[HttpPost("deleteBurialMain")]
-        //public IActionResult DeleteBurialMain(int id)
-        //{
-        //    if(UOW.BurialMain.GetById(id) == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    try
-        //    {
-
-        //    }
-        //}
+        [HttpDelete]
+        [Route("deleteBurialMain")]
+        public JsonResult DeleteBurialMain(long id)
+        {
+            try
+            {
+                var burialMain = UOW.BurialMain.GetById(id);
+                if ( burialMain == null)
+                {
+                    return new JsonResult("This is null");
+                }
+                UOW.BurialMain.Remove(burialMain);
+                UOW.Complete();
+                return new JsonResult("It worked and is deleted");
+            }
+            catch(Exception ex )
+            {
+                return new JsonResult($"Bad request buddy: {ex.Message}");
+            }
+        }
 
         // Crud
         // burialmain

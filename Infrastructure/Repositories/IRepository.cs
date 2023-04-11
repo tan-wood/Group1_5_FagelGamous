@@ -6,6 +6,7 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
     public interface IRepository<T> where T : class
     {
         T? GetById(int id);
+        T? GetById(long id);
         /// <summary>
         /// Used for versatile querying
         /// </summary>
@@ -24,7 +25,7 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>Returns newly created entity's id</returns>
-        void Add(T entity);
+        T Add(T entity);
         /// <summary>
         /// Adds a range of entities
         /// </summary>

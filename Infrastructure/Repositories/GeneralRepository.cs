@@ -15,9 +15,10 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
             //This is already giving us the single table for our use
             DbSet = context.Set<T>();
         }
-        public void Add(T entity)
+        public T Add(T entity)
         {
             DbSet.Add(entity);
+            return entity;
         }
 
         public void AddRange(IEnumerable<T> entities)
@@ -31,6 +32,11 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
         }
 
         public T? GetById(int id)
+        {
+            return DbSet.Find(id);
+        }
+
+        public T? GetById(long id)
         {
             return DbSet.Find(id);
         }
