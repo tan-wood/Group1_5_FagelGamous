@@ -117,6 +117,11 @@ namespace Group1_5_FagelGamous.Controllers
             }
         }
 
+        // routes to finish
+            //update burialmain
+        
+        //make sure to change everything to have exceptions on the catch... and the json result
+
         // Crud
         // burialmain
         // textile
