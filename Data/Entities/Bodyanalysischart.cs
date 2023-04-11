@@ -38,7 +38,7 @@ namespace Group1_5_FagelGamous.Data.Entities
         public string? Humerus { get; set; }
         public double? Femurheaddiameter { get; set; }
         public double? Humerusheaddiameter { get; set; }
-        public double? Femurlength { get; set; }
+        public double? Femidurlength { get; set; }
         public double? Humeruslength { get; set; }
         public double? Estimatestature { get; set; }
         public string? Osteophytosis { get; set; }
@@ -47,5 +47,6 @@ namespace Group1_5_FagelGamous.Data.Entities
         public string? Burialnumber { get; set; }
         public double? Tibia { get; set; }
         public string? Burialid { get; set; }
+        public long? Id { get; set; }
     }
 }

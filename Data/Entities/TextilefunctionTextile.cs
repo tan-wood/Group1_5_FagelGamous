@@ -7,5 +7,7 @@ namespace Group1_5_FagelGamous.Data.Entities
     {
         public long MainTextilefunctionid { get; set; }
         public long MainTextileid { get; set; }
+        public virtual Textile? Textiles { get; set; }
+        public virtual Textilefunction? TextileFunctions { get; set; }
     }
 }
