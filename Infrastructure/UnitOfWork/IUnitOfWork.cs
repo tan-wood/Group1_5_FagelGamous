@@ -6,8 +6,6 @@ namespace PureTruthApi.Data.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        public interface IUnitOfWork : IDisposable
-        {
             IRepository<Analysis> Analysis { get; }
             IRepository<AnalysisTextile> AnalysisTextile { get; }
             IRepository<Artifactfagelgamousregister> ArtifactFagelgamousRegister { get; }
@@ -44,7 +42,7 @@ namespace PureTruthApi.Data.UnitOfWork
             IRepository<Yarnmanipulation> YarnManipulation { get; }
             IRepository<YarnmanipulationTextile> YarnManipulationTextile { get; }
             int Complete();
-        }
+        
 
     }
 }
