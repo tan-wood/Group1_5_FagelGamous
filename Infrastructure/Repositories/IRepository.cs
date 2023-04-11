@@ -2,7 +2,7 @@
 
 namespace Group1_5_FagelGamous.Infrastructure.Repositories
 {
-{
+
     public interface IRepository<T> where T : class
     {
         T? GetById(int id);
