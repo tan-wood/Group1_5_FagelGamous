@@ -5,6 +5,11 @@ namespace Group1_5_FagelGamous.Data.Entities
 {
     public partial class Yarnmanipulation
     {
+        public Yarnmanipulation()
+        {
+            MainTextiles = new HashSet<Textile>();
+        }
+
         public long Id { get; set; }
         public string? Thickness { get; set; }
         public string? Angle { get; set; }
@@ -15,5 +20,7 @@ namespace Group1_5_FagelGamous.Data.Entities
         public string? Ply { get; set; }
         public int? Yarnmanipulationid { get; set; }
         public string? Direction { get; set; }
+
+        public virtual ICollection<Textile> MainTextiles { get; set; }
     }
 }

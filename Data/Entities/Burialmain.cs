@@ -5,6 +5,11 @@ namespace Group1_5_FagelGamous.Data.Entities
 {
     public partial class Burialmain
     {
+        public Burialmain()
+        {
+            MainTextiles = new HashSet<Textile>();
+        }
+
         public long Id { get; set; }
         public string? Squarenorthsouth { get; set; }
         public string? Headdirection { get; set; }
@@ -40,5 +45,7 @@ namespace Group1_5_FagelGamous.Data.Entities
         public string? Fieldbookexcavationyear { get; set; }
         public string? Clusternumber { get; set; }
         public string? Shaftnumber { get; set; }
+
+        public virtual ICollection<Textile> MainTextiles { get; set; }
     }
 }

@@ -18,27 +18,17 @@ namespace Group1_5_FagelGamous.Data
         }
 
         public virtual DbSet<Analysis> Analyses { get; set; } = null!;
-        public virtual DbSet<AnalysisTextile> AnalysisTextiles { get; set; } = null!;
-        public virtual DbSet<Bodyanalysischart> Bodyanalysischarts { get; set; } = null!;
-        public virtual DbSet<BurialmainTextile> BurialmainTextiles { get; set; } = null!;
         public virtual DbSet<Burialmain> Burialmains { get; set; } = null!;
         public virtual DbSet<Color> Colors { get; set; } = null!;
-        public virtual DbSet<ColorTextile> ColorTextiles { get; set; } = null!;
         public virtual DbSet<Decoration> Decorations { get; set; } = null!;
-        public virtual DbSet<DecorationTextile> DecorationTextiles { get; set; } = null!;
         public virtual DbSet<Dimension> Dimensions { get; set; } = null!;
-        public virtual DbSet<DimensionTextile> DimensionTextiles { get; set; } = null!;
-        public virtual DbSet<PhotodataTextile> PhotodataTextiles { get; set; } = null!;
         public virtual DbSet<Photodatum> Photodata { get; set; } = null!;
         public virtual DbSet<Photoform> Photoforms { get; set; } = null!;
         public virtual DbSet<Structure> Structures { get; set; } = null!;
-        public virtual DbSet<StructureTextile> StructureTextiles { get; set; } = null!;
         public virtual DbSet<Teammember> Teammembers { get; set; } = null!;
         public virtual DbSet<Textile> Textiles { get; set; } = null!;
         public virtual DbSet<Textilefunction> Textilefunctions { get; set; } = null!;
-        public virtual DbSet<TextilefunctionTextile> TextilefunctionTextiles { get; set; } = null!;
         public virtual DbSet<Yarnmanipulation> Yarnmanipulations { get; set; } = null!;
-        public virtual DbSet<YarnmanipulationTextile> YarnmanipulationTextiles { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -69,194 +59,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Doneby)
                     .HasMaxLength(100)
                     .HasColumnName("doneby");
-            });
 
-            modelBuilder.Entity<AnalysisTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainAnalysisid, e.MainTextileid })
-                    .HasName("main$analysis_textile_pkey");
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainAnalyses)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "AnalysisTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Analysis>().WithMany().HasForeignKey("MainAnalysisid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_analysis"),
+                        j =>
+                        {
+                            j.HasKey("MainAnalysisid", "MainTextileid").HasName("main$analysis_textile_pkey");
 
-                entity.ToTable("analysis_textile");
+                            j.ToTable("analysis_textile");
 
-                entity.HasIndex(e => new { e.MainTextileid, e.MainAnalysisid }, "idx_main$analysis_textile_main$textile_main$analysis");
+                            j.HasIndex(new[] { "MainTextileid", "MainAnalysisid" }, "idx_main$analysis_textile_main$textile_main$analysis");
 
-                entity.Property(e => e.MainAnalysisid).HasColumnName("main$analysisid");
+                            j.IndexerProperty<long>("MainAnalysisid").HasColumnName("main$analysisid");
 
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
-            });
-            modelBuilder.Entity<BurialmainTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainBurialmainid, e.MainTextileid })
-                    .HasName("main$burialmain_textile_pkey");
-
-                entity.ToTable("burialmain_textile");
-
-                entity.HasIndex(e => new { e.MainTextileid, e.MainBurialmainid }, "idx_main$burialmain_textile_main$textile_main$burialmain");
-
-                entity.Property(e => e.MainBurialmainid).HasColumnName("main$burialmainid");
-
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
-            });
-
-            modelBuilder.Entity<Bodyanalysischart>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("bodyanalysischart");
-
-                entity.Property(e => e.Area)
-                    .HasColumnType("character varying")
-                    .HasColumnName("area");
-
-                entity.Property(e => e.Burialid)
-                    .HasColumnType("character varying")
-                    .HasColumnName("burialid");
-
-                entity.Property(e => e.Burialnumber)
-                    .HasColumnType("character varying")
-                    .HasColumnName("burialnumber");
-
-                entity.Property(e => e.CariesPeriodontalDisease)
-                    .HasColumnType("character varying")
-                    .HasColumnName("caries_periodontal_disease");
-
-                entity.Property(e => e.Dateofexamination).HasColumnName("dateofexamination");
-
-                entity.Property(e => e.Dorsalpitting)
-                    .HasColumnType("character varying")
-                    .HasColumnName("dorsalpitting");
-
-                entity.Property(e => e.Eastwest)
-                    .HasColumnType("character varying")
-                    .HasColumnName("eastwest");
-
-                entity.Property(e => e.Estimatestature).HasColumnName("estimatestature");
-
-                entity.Property(e => e.Femidurlength).HasColumnName("femidurlength");
-
-                entity.Property(e => e.Femur)
-                    .HasColumnType("character varying")
-                    .HasColumnName("femur");
-
-                entity.Property(e => e.Femurheaddiameter).HasColumnName("femurheaddiameter");
-
-                entity.Property(e => e.Gonion)
-                    .HasColumnType("character varying")
-                    .HasColumnName("gonion");
-
-                entity.Property(e => e.Haircolor)
-                    .HasColumnType("character varying")
-                    .HasColumnName("haircolor");
-
-                entity.Property(e => e.Humerus)
-                    .HasColumnType("character varying")
-                    .HasColumnName("humerus");
-
-                entity.Property(e => e.Humerusheaddiameter).HasColumnName("humerusheaddiameter");
-
-                entity.Property(e => e.Humeruslength).HasColumnName("humeruslength");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Lamboidsuture)
-                    .HasColumnType("character varying")
-                    .HasColumnName("lamboidsuture");
-
-                entity.Property(e => e.MedialIpRamus)
-                    .HasColumnType("character varying")
-                    .HasColumnName("medial_ip_ramus");
-
-                entity.Property(e => e.Northsouth)
-                    .HasColumnType("character varying")
-                    .HasColumnName("northsouth");
-
-                entity.Property(e => e.Notes)
-                    .HasColumnType("character varying")
-                    .HasColumnName("notes");
-
-                entity.Property(e => e.Nuchalcrest)
-                    .HasColumnType("character varying")
-                    .HasColumnName("nuchalcrest");
-
-                entity.Property(e => e.Observations)
-                    .HasColumnType("character varying")
-                    .HasColumnName("observations");
-
-                entity.Property(e => e.Orbitedge)
-                    .HasColumnType("character varying")
-                    .HasColumnName("orbitedge");
-
-                entity.Property(e => e.Osteophytosis)
-                    .HasColumnType("character varying")
-                    .HasColumnName("osteophytosis");
-
-                entity.Property(e => e.Parietalbossing)
-                    .HasColumnType("character varying")
-                    .HasColumnName("parietalbossing");
-
-                entity.Property(e => e.Preauricularsulcus)
-                    .HasColumnType("character varying")
-                    .HasColumnName("preauricularsulcus");
-
-                entity.Property(e => e.Preservationindex).HasColumnName("preservationindex");
-
-                entity.Property(e => e.Pubicbone)
-                    .HasColumnType("character varying")
-                    .HasColumnName("pubicbone");
-
-                entity.Property(e => e.Robust)
-                    .HasColumnType("character varying")
-                    .HasColumnName("robust");
-
-                entity.Property(e => e.Sciaticnotch)
-                    .HasColumnType("character varying")
-                    .HasColumnName("sciaticnotch");
-
-                entity.Property(e => e.Sphenooccipitalsynchrondrosis)
-                    .HasColumnType("character varying")
-                    .HasColumnName("sphenooccipitalsynchrondrosis");
-
-                entity.Property(e => e.Squamossuture)
-                    .HasColumnType("character varying")
-                    .HasColumnName("squamossuture");
-
-                entity.Property(e => e.Squareeastwest)
-                    .HasColumnType("character varying")
-                    .HasColumnName("squareeastwest");
-
-                entity.Property(e => e.Squarenorthsouth)
-                    .HasColumnType("character varying")
-                    .HasColumnName("squarenorthsouth");
-
-                entity.Property(e => e.Subpubicangle)
-                    .HasColumnType("character varying")
-                    .HasColumnName("subpubicangle");
-
-                entity.Property(e => e.Supraorbitalridges)
-                    .HasColumnType("character varying")
-                    .HasColumnName("supraorbitalridges");
-
-                entity.Property(e => e.Tibia).HasColumnName("tibia");
-
-                entity.Property(e => e.Toothattrition)
-                    .HasColumnType("character varying")
-                    .HasColumnName("toothattrition");
-
-                entity.Property(e => e.Tootheruption)
-                    .HasColumnType("character varying")
-                    .HasColumnName("tootheruption");
-
-                entity.Property(e => e.Tootheruptionageestimate)
-                    .HasColumnType("character varying")
-                    .HasColumnName("tootheruptionageestimate");
-
-                entity.Property(e => e.Ventralarc)
-                    .HasColumnType("character varying")
-                    .HasColumnName("ventralarc");
-
-                entity.Property(e => e.Zygomaticcrest)
-                    .HasColumnType("character varying")
-                    .HasColumnName("zygomaticcrest");
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Burialmain>(entity =>
@@ -400,6 +221,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Wrapping)
                     .HasMaxLength(200)
                     .HasColumnName("wrapping");
+
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainBurialmains)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "BurialmainTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Burialmain>().WithMany().HasForeignKey("MainBurialmainid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_burial_main"),
+                        j =>
+                        {
+                            j.HasKey("MainBurialmainid", "MainTextileid").HasName("main$burialmain_textile_pkey");
+
+                            j.ToTable("burialmain_textile");
+
+                            j.HasIndex(new[] { "MainTextileid", "MainBurialmainid" }, "idx_main$burialmain_textile_main$textile_main$burialmain");
+
+                            j.IndexerProperty<long>("MainBurialmainid").HasColumnName("main$burialmainid");
+
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Color>(entity =>
@@ -415,20 +255,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Value)
                     .HasMaxLength(500)
                     .HasColumnName("value");
-            });
 
-            modelBuilder.Entity<ColorTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainColorid, e.MainTextileid })
-                    .HasName("main$color_textile_pkey");
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainColors)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "ColorTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Color>().WithMany().HasForeignKey("MainColorid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_color"),
+                        j =>
+                        {
+                            j.HasKey("MainColorid", "MainTextileid").HasName("main$color_textile_pkey");
 
-                entity.ToTable("color_textile");
+                            j.ToTable("color_textile");
 
-                entity.HasIndex(e => new { e.MainTextileid, e.MainColorid }, "idx_main$color_textile_main$textile_main$color");
+                            j.HasIndex(new[] { "MainTextileid", "MainColorid" }, "idx_main$color_textile_main$textile_main$color");
 
-                entity.Property(e => e.MainColorid).HasColumnName("main$colorid");
+                            j.IndexerProperty<long>("MainColorid").HasColumnName("main$colorid");
 
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Decoration>(entity =>
@@ -444,20 +289,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Value)
                     .HasMaxLength(500)
                     .HasColumnName("value");
-            });
 
-            modelBuilder.Entity<DecorationTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainDecorationid, e.MainTextileid })
-                    .HasName("main$decoration_textile_pkey");
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainDecorations)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "DecorationTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Decoration>().WithMany().HasForeignKey("MainDecorationid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_decoration"),
+                        j =>
+                        {
+                            j.HasKey("MainDecorationid", "MainTextileid").HasName("main$decoration_textile_pkey");
 
-                entity.ToTable("decoration_textile");
+                            j.ToTable("decoration_textile");
 
-                entity.HasIndex(e => new { e.MainTextileid, e.MainDecorationid }, "idx_main$decoration_textile_main$textile_main$decoration");
+                            j.HasIndex(new[] { "MainTextileid", "MainDecorationid" }, "idx_main$decoration_textile_main$textile_main$decoration");
 
-                entity.Property(e => e.MainDecorationid).HasColumnName("main$decorationid");
+                            j.IndexerProperty<long>("MainDecorationid").HasColumnName("main$decorationid");
 
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Dimension>(entity =>
@@ -477,34 +327,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Value)
                     .HasMaxLength(200)
                     .HasColumnName("value");
-            });
 
-            modelBuilder.Entity<DimensionTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainDimensionid, e.MainTextileid })
-                    .HasName("main$dimension_textile_pkey");
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainDimensions)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "DimensionTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Dimension>().WithMany().HasForeignKey("MainDimensionid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_dimension"),
+                        j =>
+                        {
+                            j.HasKey("MainDimensionid", "MainTextileid").HasName("main$dimension_textile_pkey");
 
-                entity.ToTable("dimension_textile");
+                            j.ToTable("dimension_textile");
 
-                entity.HasIndex(e => new { e.MainTextileid, e.MainDimensionid }, "idx_main$dimension_textile_main$textile_main$dimension");
+                            j.HasIndex(new[] { "MainTextileid", "MainDimensionid" }, "idx_main$dimension_textile_main$textile_main$dimension");
 
-                entity.Property(e => e.MainDimensionid).HasColumnName("main$dimensionid");
+                            j.IndexerProperty<long>("MainDimensionid").HasColumnName("main$dimensionid");
 
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
-            });
-
-            modelBuilder.Entity<PhotodataTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainPhotodataid, e.MainTextileid })
-                    .HasName("main$photodata_textile_pkey");
-
-                entity.ToTable("photodata_textile");
-
-                entity.HasIndex(e => new { e.MainTextileid, e.MainPhotodataid }, "idx_main$photodata_textile_main$textile_main$photodata");
-
-                entity.Property(e => e.MainPhotodataid).HasColumnName("main$photodataid");
-
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Photodatum>(entity =>
@@ -532,6 +373,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Url)
                     .HasMaxLength(500)
                     .HasColumnName("url");
+
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainPhotodata)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "PhotodataTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Photodatum>().WithMany().HasForeignKey("MainPhotodataid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_photodata"),
+                        j =>
+                        {
+                            j.HasKey("MainPhotodataid", "MainTextileid").HasName("main$photodata_textile_pkey");
+
+                            j.ToTable("photodata_textile");
+
+                            j.HasIndex(new[] { "MainTextileid", "MainPhotodataid" }, "idx_main$photodata_textile_main$textile_main$photodata");
+
+                            j.IndexerProperty<long>("MainPhotodataid").HasColumnName("main$photodataid");
+
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Photoform>(entity =>
@@ -596,20 +456,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Value)
                     .HasMaxLength(500)
                     .HasColumnName("value");
-            });
 
-            modelBuilder.Entity<StructureTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainStructureid, e.MainTextileid })
-                    .HasName("main$structure_textile_pkey");
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainStructures)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "StructureTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Structure>().WithMany().HasForeignKey("MainStructureid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_structure"),
+                        j =>
+                        {
+                            j.HasKey("MainStructureid", "MainTextileid").HasName("main$structure_textile_pkey");
 
-                entity.ToTable("structure_textile");
+                            j.ToTable("structure_textile");
 
-                entity.HasIndex(e => new { e.MainTextileid, e.MainStructureid }, "idx_main$structure_textile_main$textile_main$structure");
+                            j.HasIndex(new[] { "MainTextileid", "MainStructureid" }, "idx_main$structure_textile_main$textile_main$structure");
 
-                entity.Property(e => e.MainStructureid).HasColumnName("main$structureid");
+                            j.IndexerProperty<long>("MainStructureid").HasColumnName("main$structureid");
 
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Teammember>(entity =>
@@ -681,20 +546,25 @@ namespace Group1_5_FagelGamous.Data
                 entity.Property(e => e.Value)
                     .HasMaxLength(200)
                     .HasColumnName("value");
-            });
 
-            modelBuilder.Entity<TextilefunctionTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainTextilefunctionid, e.MainTextileid })
-                    .HasName("main$textilefunction_textile_pkey");
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainTextilefunctions)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "TextilefunctionTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Textilefunction>().WithMany().HasForeignKey("MainTextilefunctionid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textilefunction"),
+                        j =>
+                        {
+                            j.HasKey("MainTextilefunctionid", "MainTextileid").HasName("main$textilefunction_textile_pkey");
 
-                entity.ToTable("textilefunction_textile");
+                            j.ToTable("textilefunction_textile");
 
-                entity.HasIndex(e => new { e.MainTextileid, e.MainTextilefunctionid }, "idx_main$textilefunction_textile");
+                            j.HasIndex(new[] { "MainTextileid", "MainTextilefunctionid" }, "idx_main$textilefunction_textile");
 
-                entity.Property(e => e.MainTextilefunctionid).HasColumnName("main$textilefunctionid");
+                            j.IndexerProperty<long>("MainTextilefunctionid").HasColumnName("main$textilefunctionid");
 
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.Entity<Yarnmanipulation>(entity =>
@@ -738,20 +608,25 @@ namespace Group1_5_FagelGamous.Data
                     .HasColumnName("thickness");
 
                 entity.Property(e => e.Yarnmanipulationid).HasColumnName("yarnmanipulationid");
-            });
 
-            modelBuilder.Entity<YarnmanipulationTextile>(entity =>
-            {
-                entity.HasKey(e => new { e.MainYarnmanipulationid, e.MainTextileid })
-                    .HasName("main$yarnmanipulation_textile_pkey");
+                entity.HasMany(d => d.MainTextiles)
+                    .WithMany(p => p.MainYarnmanipulations)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "YarnmanipulationTextile",
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        r => r.HasOne<Yarnmanipulation>().WithMany().HasForeignKey("MainYarnmanipulationid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_yarnmanipulation"),
+                        j =>
+                        {
+                            j.HasKey("MainYarnmanipulationid", "MainTextileid").HasName("main$yarnmanipulation_textile_pkey");
 
-                entity.ToTable("yarnmanipulation_textile");
+                            j.ToTable("yarnmanipulation_textile");
 
-                entity.HasIndex(e => new { e.MainTextileid, e.MainYarnmanipulationid }, "idx_main$yarnmanipulation_textile");
+                            j.HasIndex(new[] { "MainTextileid", "MainYarnmanipulationid" }, "idx_main$yarnmanipulation_textile");
 
-                entity.Property(e => e.MainYarnmanipulationid).HasColumnName("main$yarnmanipulationid");
+                            j.IndexerProperty<long>("MainYarnmanipulationid").HasColumnName("main$yarnmanipulationid");
 
-                entity.Property(e => e.MainTextileid).HasColumnName("main$textileid");
+                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                        });
             });
 
             modelBuilder.HasSequence("excelimporter$template_nr_mxseq");

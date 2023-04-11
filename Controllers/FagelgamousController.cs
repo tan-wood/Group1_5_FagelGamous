@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using PureTruthApi.Data.UnitOfWork;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Group1_5_FagelGamous.Controllers
 {
@@ -24,20 +27,27 @@ namespace Group1_5_FagelGamous.Controllers
         [HttpGet("getEverything")]
         public IActionResult GetEverything()
         {
-            var burialmainTextiles = UOW.BurialMainTextile.Query()
-                .Include(x => x.BurialMain)
-                .Include(x => x.Textiles)
-                .ToList();
+            var everything = UOW.Textile.Query()
+                .Include(x => x.MainAnalyses)
+                .Include(x => x.MainBurialmains)
+                .Include(x => x.MainColors)
+                .Include(x => x.MainDecorations)
+                .Include(x => x.MainPhotodata)
+                .Include(x => x.MainStructures)
+                .Include(x => x.MainTextilefunctions)
+                .Include(x => x.MainYarnmanipulations)
+                .ToArray();
 
-            var DecorationTextiles = UOW.DecorationTextile.Query()
-                .Include(x => x.Textiles)
-                .Include(x => x.Decorations)
-                .ToList();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+                ReferenceHandler = ReferenceHandler.IgnoreCycles // Disable reference handling
+            };
 
-            var together = from x in burialmainTextiles
-                           join xy in DecorationTextiles on x.MainTextileid equals xy.MainTextileid
-                           select x;
-            return Ok(together);
+            var json = JsonSerializer.Serialize(everything, options);
+
+            return Ok(json);
         }
     }
 }
