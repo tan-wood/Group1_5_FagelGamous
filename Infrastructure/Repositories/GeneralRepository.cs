@@ -36,10 +36,6 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
             return DbSet.Find(id);
         }
 
-        public T? GetById(long id)
-        {
-            return DbSet.Find(id);
-        }
 
         public IQueryable<T> Query()
         {
@@ -59,6 +55,12 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
         public IEnumerable<T> GetAll()
         {
             return DbSet.ToArray();
+        }
+
+        public T Update(T entity)
+        {
+            DbSet.Update(entity);
+            return entity;
         }
     }
 }

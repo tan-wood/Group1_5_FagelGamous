@@ -6,7 +6,6 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
     public interface IRepository<T> where T : class
     {
         T? GetById(int id);
-        T? GetById(long id);
         /// <summary>
         /// Used for versatile querying
         /// </summary>
@@ -34,5 +33,6 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
         void AddRange(IEnumerable<T> entities);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
+        T Update(T entity);
     }
 }

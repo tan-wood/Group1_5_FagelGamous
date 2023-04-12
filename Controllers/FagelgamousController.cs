@@ -11,6 +11,7 @@ using PureTruthApi.Data.UnitOfWork;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Reflection.Metadata.Ecma335;
+using Group1_5_FagelGamous.Infrastructure;
 
 namespace Group1_5_FagelGamous.Controllers
 {
@@ -41,14 +42,8 @@ namespace Group1_5_FagelGamous.Controllers
                .Include(x => x.MainTextiles).ThenInclude(x => x.MainYarnmanipulations)
                .Include(x => x.MainTextiles).ThenInclude(x => x.MainDimensions)
                .ToArray();
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = true,
-                    ReferenceHandler = ReferenceHandler.IgnoreCycles // Disable reference handling
-                };
 
-                var json = JsonSerializer.Serialize(everything, options);
+                var json = CyclicalJsonHelper.DeCyclifyYoCode(everything);
 
                 return Ok(json);
 
@@ -96,14 +91,7 @@ namespace Group1_5_FagelGamous.Controllers
                 var colors = UOW.Color.GetAll().ToArray();
                 UOW.Complete();
 
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = true,
-                    ReferenceHandler = ReferenceHandler.IgnoreCycles // Disable reference handling
-                };
-
-                var json = JsonSerializer.Serialize(colors, options);
+                var json = CyclicalJsonHelper.DeCyclifyYoCode(colors);
 
                 return Ok(colors);
             }
@@ -144,9 +132,90 @@ namespace Group1_5_FagelGamous.Controllers
                     }
                     t.MainColors = x;
                 }
+                if (t.MainDimensions != null)
+                {
+                    List<Dimension> x = new();
+                    foreach (var dimension in t.MainDimensions)
+                    {
+                        var addedDimension = UOW.Dimension.Add(dimension);
+                        x.Add(addedDimension);
+                    }
+                    t.MainDimensions = x;
+                }
+                if (t.MainDecorations != null)
+                {
+                    List<Decoration> x = new();
+                    foreach (var decoration in t.MainDecorations)
+                    {
+                        var addedDecoration = UOW.Decoration.Add(decoration);
+                        x.Add(addedDecoration);
+                    }
+                    t.MainDecorations = x;
+                }
+                if (t.MainDimensions != null)
+                {
+                    List<Dimension> x = new();
+                    foreach (var dimension in t.MainDimensions)
+                    {
+                        var addDimension = UOW.Dimension.Add(dimension);
+                        x.Add(addDimension);
+                    }
+                    t.MainDimensions = x;
+                }
+                if (t.MainPhotodata != null)
+                {
+                    List<Photodatum> x = new();
+                    foreach (var photodatum in t.MainPhotodata)
+                    {
+                        var addPhotodatum = UOW.PhotoData.Add(photodatum);
+                        x.Add(addPhotodatum);
+                    }
+                    t.MainPhotodata = x;
+                }
+                if (t.MainStructures != null)
+                {
+                    List<Structure> x = new();
+                    foreach (var s in t.MainStructures)
+                    {
+                        var added = UOW.Structure.Add(s);
+                        x.Add(added);
+                    }
+                    t.MainStructures = x;
+                }
+                if (t.MainAnalyses != null)
+                {
+                    List<Analysis> x = new();
+                    foreach (var a in t.MainAnalyses)
+                    {
+                        var added = UOW.Analysis.Add(a);
+                        x.Add(added);
+                    }
+                    t.MainAnalyses = x;
+                }
+                if (t.MainTextilefunctions != null)
+                {
+                    List<Textilefunction> x = new();
+                    foreach (var tf in t.MainTextilefunctions)
+                    {
+                        var added = UOW.TextileFunction.Add(tf);
+                        x.Add(added);
+                    }
+                    t.MainTextilefunctions = x;
+                }
+                if (t.MainYarnmanipulations != null)
+                {
+                    List<Yarnmanipulation> x = new();
+                    foreach (var y in t.MainYarnmanipulations)
+                    {
+                        var added = UOW.YarnManipulation.Add(y);
+                        x.Add(added);
+                    }
+                    t.MainYarnmanipulations = x;
+                }
+
                 var addedTextile = UOW.Textile.Add(t);
                 UOW.Complete();
-                return Ok(new JsonResult("Your textile has been added sir"));
+                return Ok(new JsonResult("Your textile has been added"));
             }
             catch(Exception ex)
             {
@@ -154,41 +223,16 @@ namespace Group1_5_FagelGamous.Controllers
             }
         }
 
-        [HttpPost("createColor")]
-        public IActionResult CreateColor([FromBody] Color c)
-        {
-            try
-            {
-                var addedColor = UOW.Color.Add(c);
-                UOW.Complete();
-                return Ok(addedColor);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new JsonResult(ex.Message));
-            }
-        }
-        //dimensions
-        //decoration
-        //dimensions
-        //photodatum
-        //structure
-        //analysis
-        //textilefunction
-        //yarnmanipulation
-
-
-
         [HttpDelete]
         [Route("deleteBurialMain")]
-        public JsonResult DeleteBurialMain(long id)
+        public IActionResult DeleteBurialMain(int id)
         {
             try
             {
                 var burialMain = UOW.BurialMain.GetById(id);
                 if ( burialMain == null)
                 {
-                    return new JsonResult("This is null");
+                    return Ok(new JsonResult("This is null"));
                 }
                 UOW.BurialMain.Remove(burialMain);
                 UOW.Complete();
@@ -196,25 +240,33 @@ namespace Group1_5_FagelGamous.Controllers
             }
             catch(Exception ex )
             {
-                return new JsonResult($"Bad request buddy: {ex.Message}");
+                return BadRequest(new JsonResult($"Bad request: {ex.Message}"));
             }
         }
 
-        // routes to finish
-            //update burialmain
-        
-        //make sure to change everything to have exceptions on the catch... and the json result
+        [HttpPut]
+        [Route("updateBurialMain")]
+        public IActionResult UpdateBurialMain([FromBody] Burialmain b)
+        {
+            try
+            {
+                    UOW.BurialMain.Update(b);
+                
+            }catch(Exception ex)
+            {
+                return BadRequest(new JsonResult($"Bad request: {ex.Message}"));
+            }
 
-        // Crud
-        // burialmain
-        // textile
-        // Bonus
-        //subcomponents of textile is a plus but not required
+            UOW.Complete();
 
-        //update is change entity1 and change entity2 nothin in link
-        // create is add entity1 and add eneity2 then add both pk in link
-        // delete is delete from e1 and delete from e2 then delete the pks of each from link
+            return Ok(new JsonResult("Your burial has been updated"));
+        }
 
-        //TODO: Make helper function that avoids returning cyclical stuff
+
+        //TODO: Normalize the flippin database so that we have a colors table
+        //TODO: Potentials: dimensions, decoration, dimensions, photodatum, structure, analysis, textilefunction, yarnmanipulation
+
+
+
     }
 }
