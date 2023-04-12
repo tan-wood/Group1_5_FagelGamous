@@ -28,17 +28,17 @@ namespace Group1_5_FagelGamous.Controllers
         [HttpGet("getEverything")]
         public IActionResult GetEverything()
         {
-            var everything = UOW.Textile.Query()
-                .Include(x => x.MainAnalyses)
-                .Include(x => x.MainBurialmains)
-                .Include(x => x.MainColors)
-                .Include(x => x.MainDecorations)
-                .Include(x => x.MainPhotodata)
-                .Include(x => x.MainStructures)
-                .Include(x => x.MainTextilefunctions)
-                .Include(x => x.MainYarnmanipulations)
-                .Include(x => x.MainDimensions) 
-                .ToArray();
+            var everything = UOW.BurialMain.Query()
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainAnalyses)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainBurialmains)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainColors)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainDecorations)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainPhotodata)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainStructures)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainTextilefunctions)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainYarnmanipulations)
+           .Include(x => x.MainTextiles).ThenInclude(x => x.MainDimensions)
+           .ToArray();
 
             var options = new JsonSerializerOptions
             {
