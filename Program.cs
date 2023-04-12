@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
-using PureTruthApi.Data.UnitOfWork;
+using Group1_5_FagelGamous.Data.UnitOfWork;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

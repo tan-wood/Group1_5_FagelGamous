@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
-using PureTruthApi.Data.UnitOfWork;
+using Group1_5_FagelGamous.Data.UnitOfWork;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Reflection.Metadata.Ecma335;
 using Group1_5_FagelGamous.Infrastructure;
+using System.Diagnostics;
 
 namespace Group1_5_FagelGamous.Controllers
 {
@@ -21,9 +22,11 @@ namespace Group1_5_FagelGamous.Controllers
     public class FagelgamousController : ControllerBase
     {
         private readonly IUnitOfWork UOW;
+        private readonly FagelgamousControllerHelper Helper;
         public FagelgamousController(IUnitOfWork unitOfWork) 
         { 
             UOW= unitOfWork;
+            Helper = new FagelgamousControllerHelper(UOW);
         }
 
         [HttpGet("getEverything")]
@@ -33,7 +36,7 @@ namespace Group1_5_FagelGamous.Controllers
             {
                 var everything = UOW.BurialMain.Query()
                .Include(x => x.MainTextiles).ThenInclude(x => x.MainAnalyses)
-               .Include(x => x.MainTextiles).ThenInclude(x => x.MainBurialmains)
+               .Include(x => x.MainTextiles).ThenInclude(x =>x.MainBurialmains)
                .Include(x => x.MainTextiles).ThenInclude(x => x.MainColors)
                .Include(x => x.MainTextiles).ThenInclude(x => x.MainDecorations)
                .Include(x => x.MainTextiles).ThenInclude(x => x.MainPhotodata)
@@ -43,7 +46,7 @@ namespace Group1_5_FagelGamous.Controllers
                .Include(x => x.MainTextiles).ThenInclude(x => x.MainDimensions)
                .ToArray();
 
-                var json = CyclicalJsonHelper.DeCyclifyYoCode(everything);
+                var json = Helper.DeCyclifyYoCode(everything);
 
                 return Ok(json);
 
@@ -63,6 +66,25 @@ namespace Group1_5_FagelGamous.Controllers
                 return Ok(burialMain);
             }
             catch(Exception ex)
+            {
+                return BadRequest(new JsonResult(ex.Message));
+            }
+        }
+
+        [HttpGet("getSingleBurialMain/{id}")]
+        public IActionResult GetSingleBurialMain(int id)
+        {
+            try
+            {
+                var burialMain = UOW.BurialMain.Query()
+                    .Where(x => x.Id == id)
+                    .Include(x=>x.MainTextiles)
+                    .ToArray();
+
+                var json = Helper.DeCyclifyYoCode(burialMain);
+                return Ok(json);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new JsonResult(ex.Message));
             }
@@ -91,7 +113,7 @@ namespace Group1_5_FagelGamous.Controllers
                 var colors = UOW.Color.GetAll().ToArray();
                 UOW.Complete();
 
-                var json = CyclicalJsonHelper.DeCyclifyYoCode(colors);
+                var json = Helper.DeCyclifyYoCode(colors);
 
                 return Ok(colors);
             }
@@ -107,9 +129,15 @@ namespace Group1_5_FagelGamous.Controllers
         {
             try
             {
+                if(b.MainTextiles != null)
+                {
+                    IEnumerable<Textile> text= UOW.Textile.AddRange(b.MainTextiles);
+                    b.MainTextiles = (ICollection<Textile>)text;
+                }
                 var addedBurialMain = UOW.BurialMain.Add(b);
                 UOW.Complete();
-                return Ok(addedBurialMain);
+                var json = Helper.DeCyclifyYoCode(addedBurialMain);
+                return Ok(json);
             }
             catch
             {
@@ -122,96 +150,8 @@ namespace Group1_5_FagelGamous.Controllers
         {
             try
             {
-                if(t.MainColors != null)
-                {
-                    List<Color> x = new();
-                    foreach(var color in t.MainColors)
-                    {
-                        var colors = UOW.Color.Add(color);
-                        x.Add(colors);
-                    }
-                    t.MainColors = x;
-                }
-                if (t.MainDimensions != null)
-                {
-                    List<Dimension> x = new();
-                    foreach (var dimension in t.MainDimensions)
-                    {
-                        var addedDimension = UOW.Dimension.Add(dimension);
-                        x.Add(addedDimension);
-                    }
-                    t.MainDimensions = x;
-                }
-                if (t.MainDecorations != null)
-                {
-                    List<Decoration> x = new();
-                    foreach (var decoration in t.MainDecorations)
-                    {
-                        var addedDecoration = UOW.Decoration.Add(decoration);
-                        x.Add(addedDecoration);
-                    }
-                    t.MainDecorations = x;
-                }
-                if (t.MainDimensions != null)
-                {
-                    List<Dimension> x = new();
-                    foreach (var dimension in t.MainDimensions)
-                    {
-                        var addDimension = UOW.Dimension.Add(dimension);
-                        x.Add(addDimension);
-                    }
-                    t.MainDimensions = x;
-                }
-                if (t.MainPhotodata != null)
-                {
-                    List<Photodatum> x = new();
-                    foreach (var photodatum in t.MainPhotodata)
-                    {
-                        var addPhotodatum = UOW.PhotoData.Add(photodatum);
-                        x.Add(addPhotodatum);
-                    }
-                    t.MainPhotodata = x;
-                }
-                if (t.MainStructures != null)
-                {
-                    List<Structure> x = new();
-                    foreach (var s in t.MainStructures)
-                    {
-                        var added = UOW.Structure.Add(s);
-                        x.Add(added);
-                    }
-                    t.MainStructures = x;
-                }
-                if (t.MainAnalyses != null)
-                {
-                    List<Analysis> x = new();
-                    foreach (var a in t.MainAnalyses)
-                    {
-                        var added = UOW.Analysis.Add(a);
-                        x.Add(added);
-                    }
-                    t.MainAnalyses = x;
-                }
-                if (t.MainTextilefunctions != null)
-                {
-                    List<Textilefunction> x = new();
-                    foreach (var tf in t.MainTextilefunctions)
-                    {
-                        var added = UOW.TextileFunction.Add(tf);
-                        x.Add(added);
-                    }
-                    t.MainTextilefunctions = x;
-                }
-                if (t.MainYarnmanipulations != null)
-                {
-                    List<Yarnmanipulation> x = new();
-                    foreach (var y in t.MainYarnmanipulations)
-                    {
-                        var added = UOW.YarnManipulation.Add(y);
-                        x.Add(added);
-                    }
-                    t.MainYarnmanipulations = x;
-                }
+                //This goes through the process of determining if we need to add the sub portions of a textile
+                t = Helper.TextileBuilder(t);
 
                 var addedTextile = UOW.Textile.Add(t);
                 UOW.Complete();
@@ -250,22 +190,69 @@ namespace Group1_5_FagelGamous.Controllers
         {
             try
             {
-                    UOW.BurialMain.Update(b);
-                
-            }catch(Exception ex)
+                //if there are textiles in this burial main
+                if (b.MainTextiles != null)
+                {
+                    //build a new list that will hold the newly created/ updated textiles
+                    List<Textile> x = new();
+                    foreach (var textile in b.MainTextiles)
+                    {
+                        //if the textile id is not yet created (the id is set to 0 initially)
+                        if (textile.Id == 0)
+                        {
+                            //Since this is a brand new textile, we need to go through the same process as when we created a textile and add its sub components
+                            Textile tNew = Helper.TextileBuilder(textile);
+                            //then go and add this textile to the textile table
+                            var added = UOW.Textile.Add(tNew);
+                            //Then add it to the overall list
+                            x.Add(added);
+                        }
+                        //if the textile does exist already(meaning there is a textile id)
+                        else
+                        {
+                            //then update that textile with the current one
+                            UOW.Textile.Update(textile);
+                            //Add this textile back to the maintextiles
+                            x.Add(textile);
+                        }
+                    }
+                    b.MainTextiles = x;
+                }
+                var updatedBurialMain = UOW.BurialMain.Update(b);
+                UOW.Complete();
+                var json = Helper.DeCyclifyYoCode(updatedBurialMain);
+                return Ok();
+            }
+            catch(Exception ex)
             {
-                return BadRequest(new JsonResult($"Bad request: {ex.Message}"));
+                return BadRequest(new JsonResult(ex.Message));
             }
 
-            UOW.Complete();
-
-            return Ok(new JsonResult("Your burial has been updated"));
         }
 
+        [HttpPut("updateTextile")]
+        public IActionResult UpdateTextile([FromBody] Textile t)
+        {
+            try
+            {
+                //resetting the object t with all the updated/created subportions
+                t = Helper.TextileBuilder(t);
 
-        //TODO: Normalize the flippin database so that we have a colors table
-        //TODO: Potentials: dimensions, decoration, dimensions, photodatum, structure, analysis, textilefunction, yarnmanipulation
+                UOW.Textile.Update(t);
+                UOW.Complete();
+                return Ok(new JsonResult("Your textile has been updated"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new JsonResult(ex.Message));
+            }
+        }
 
+        //TODO: If it is not working, then check your connection strings
+        //TODO: FIX CRAPY burial main update
+        //TODO: update for textile
+        //TODO: delete textile
+        //TODO: SECURITY 
 
 
     }

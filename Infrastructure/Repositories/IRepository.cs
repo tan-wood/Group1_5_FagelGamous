@@ -30,7 +30,7 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
         /// </summary>
         /// <param name="entities"></param>
         /// <returns>Returns a list of all the ids that were created</returns>
-        void AddRange(IEnumerable<T> entities);
+        IEnumerable<T> AddRange(IEnumerable<T> entities);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
         T Update(T entity);

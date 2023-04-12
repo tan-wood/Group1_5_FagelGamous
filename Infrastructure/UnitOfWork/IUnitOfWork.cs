@@ -2,7 +2,7 @@
 using Group1_5_FagelGamous.Infrastructure.Repositories;
 using static System.Reflection.Metadata.BlobBuilder;
 
-namespace PureTruthApi.Data.UnitOfWork
+namespace Group1_5_FagelGamous.Data.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {

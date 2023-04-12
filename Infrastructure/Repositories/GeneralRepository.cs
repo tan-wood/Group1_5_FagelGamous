@@ -21,9 +21,10 @@ namespace Group1_5_FagelGamous.Infrastructure.Repositories
             return entity;
         }
 
-        public void AddRange(IEnumerable<T> entities)
+        public IEnumerable<T> AddRange(IEnumerable<T> entities)
         {
             DbSet.AddRange(entities);
+            return entities;
         }
 
         public IEnumerable<T>? Find(Expression<Func<T, bool>> expression)

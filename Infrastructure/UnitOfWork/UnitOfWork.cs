@@ -3,7 +3,7 @@ using Group1_5_FagelGamous.Data.Entities;
 using Group1_5_FagelGamous.Infrastructure.Repositories;
 using Group1_5_FagelGamous.Data;
 
-namespace PureTruthApi.Data.UnitOfWork
+namespace Group1_5_FagelGamous.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
