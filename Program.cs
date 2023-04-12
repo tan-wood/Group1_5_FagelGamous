@@ -24,27 +24,16 @@ builder.Services.AddAuthorization();
 
 //region Repositories
 builder.Services.AddScoped<IRepository<Analysis>, AnalysisRepository>();
-builder.Services.AddScoped<IRepository<AnalysisTextile>, AnalysisTextileRepository>();
-builder.Services.AddScoped<IRepository<Bodyanalysischart>, BodyAnalysisChartRepository>();
 builder.Services.AddScoped<IRepository<Burialmain>, BurialMainRepository>();
-builder.Services.AddScoped<IRepository<PhotodataTextile>, PhotoDataTextileRepository>();
 builder.Services.AddScoped<IRepository<Photoform>, PhotoFormRepository>();
 builder.Services.AddScoped<IRepository<Structure>, StructureRepository>();
-builder.Services.AddScoped<IRepository<StructureTextile>, StructureTextileRepository>();
 builder.Services.AddScoped<IRepository<Teammember>, TeamMemberRepository>();
 builder.Services.AddScoped<IRepository<Textile>, TextileRepository>();
 builder.Services.AddScoped<IRepository<Textilefunction>, TextileFunctionRepository>();
-builder.Services.AddScoped<IRepository<TextilefunctionTextile>, TextileFunctionTextileRepository>();
 builder.Services.AddScoped<IRepository<Yarnmanipulation>, YarnManipulationRepository>();
-builder.Services.AddScoped<IRepository<YarnmanipulationTextile>, YarnManipulationTextileRepository>();
-builder.Services.AddScoped<IRepository<BurialmainBodyanalysischart>, BurialMainBodyAnalysisChartRepository>();
-builder.Services.AddScoped<IRepository<BurialmainTextile>, BurialMainTextileRepository>();
 builder.Services.AddScoped<IRepository<Color>, ColorRepository>();
-builder.Services.AddScoped<IRepository<ColorTextile>, ColorTextileRepository>();
 builder.Services.AddScoped<IRepository<Decoration>, DecorationRepository>();
-builder.Services.AddScoped<IRepository<DecorationTextile>, DecorationTextileRepository>();
 builder.Services.AddScoped<IRepository<Dimension>, DimensionRepository>();
-builder.Services.AddScoped<IRepository<DimensionTextile>, DimensionTextileRepository>();
 
 //end region
 

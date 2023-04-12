@@ -45,8 +45,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("analysis");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(1000L);
 
                 entity.Property(e => e.Analysisid).HasColumnName("analysisid");
 
@@ -64,7 +65,7 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainAnalyses)
                     .UsingEntity<Dictionary<string, object>>(
                         "AnalysisTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_textile"),
                         r => r.HasOne<Analysis>().WithMany().HasForeignKey("MainAnalysisid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_analysis"),
                         j =>
                         {
@@ -74,9 +75,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainAnalysisid" }, "idx_main$analysis_textile_main$textile_main$analysis");
 
-                            j.IndexerProperty<long>("MainAnalysisid").HasColumnName("main$analysisid");
+                            j.IndexerProperty<int>("MainAnalysisid").HasColumnName("main$analysisid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -85,8 +86,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("burialmain");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(2200L);
 
                 entity.Property(e => e.Adultsubadult)
                     .HasMaxLength(200)
@@ -227,7 +229,7 @@ namespace Group1_5_FagelGamous.Data
                     .UsingEntity<Dictionary<string, object>>(
                         "BurialmainTextile",
                         l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Burialmain>().WithMany().HasForeignKey("MainBurialmainid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_burial_main"),
+                        r => r.HasOne<Burialmain>().WithMany().HasForeignKey("MainBurialmainid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_burial"),
                         j =>
                         {
                             j.HasKey("MainBurialmainid", "MainTextileid").HasName("main$burialmain_textile_pkey");
@@ -236,9 +238,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainBurialmainid" }, "idx_main$burialmain_textile_main$textile_main$burialmain");
 
-                            j.IndexerProperty<long>("MainBurialmainid").HasColumnName("main$burialmainid");
+                            j.IndexerProperty<int>("MainBurialmainid").HasColumnName("main$burialmainid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -247,8 +249,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("color");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(110L);
 
                 entity.Property(e => e.Colorid).HasColumnName("colorid");
 
@@ -270,9 +273,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainColorid" }, "idx_main$color_textile_main$textile_main$color");
 
-                            j.IndexerProperty<long>("MainColorid").HasColumnName("main$colorid");
+                            j.IndexerProperty<int>("MainColorid").HasColumnName("main$colorid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -281,8 +284,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("decoration");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(35L);
 
                 entity.Property(e => e.Decorationid).HasColumnName("decorationid");
 
@@ -304,9 +308,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainDecorationid" }, "idx_main$decoration_textile_main$textile_main$decoration");
 
-                            j.IndexerProperty<long>("MainDecorationid").HasColumnName("main$decorationid");
+                            j.IndexerProperty<int>("MainDecorationid").HasColumnName("main$decorationid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -315,8 +319,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("dimension");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(500L);
 
                 entity.Property(e => e.Dimensionid).HasColumnName("dimensionid");
 
@@ -342,9 +347,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainDimensionid" }, "idx_main$dimension_textile_main$textile_main$dimension");
 
-                            j.IndexerProperty<long>("MainDimensionid").HasColumnName("main$dimensionid");
+                            j.IndexerProperty<int>("MainDimensionid").HasColumnName("main$dimensionid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -353,8 +358,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("photodata");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(960L);
 
                 entity.Property(e => e.Date)
                     .HasColumnType("timestamp without time zone")
@@ -388,9 +394,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainPhotodataid" }, "idx_main$photodata_textile_main$textile_main$photodata");
 
-                            j.IndexerProperty<long>("MainPhotodataid").HasColumnName("main$photodataid");
+                            j.IndexerProperty<int>("MainPhotodataid").HasColumnName("main$photodataid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -448,8 +454,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("structure");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(140L);
 
                 entity.Property(e => e.Structureid).HasColumnName("structureid");
 
@@ -471,9 +478,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainStructureid" }, "idx_main$structure_textile_main$textile_main$structure");
 
-                            j.IndexerProperty<long>("MainStructureid").HasColumnName("main$structureid");
+                            j.IndexerProperty<int>("MainStructureid").HasColumnName("main$structureid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -499,8 +506,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("textile");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(1200L);
 
                 entity.Property(e => e.Burialnumber)
                     .HasMaxLength(200)
@@ -538,8 +546,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("textilefunction");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(1150L);
 
                 entity.Property(e => e.Textilefunctionid).HasColumnName("textilefunctionid");
 
@@ -561,9 +570,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainTextilefunctionid" }, "idx_main$textilefunction_textile");
 
-                            j.IndexerProperty<long>("MainTextilefunctionid").HasColumnName("main$textilefunctionid");
+                            j.IndexerProperty<int>("MainTextilefunctionid").HasColumnName("main$textilefunctionid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 
@@ -572,8 +581,9 @@ namespace Group1_5_FagelGamous.Data
                 entity.ToTable("yarnmanipulation");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn()
+                    .HasIdentityOptions(1250L);
 
                 entity.Property(e => e.Angle)
                     .HasMaxLength(20)
@@ -623,9 +633,9 @@ namespace Group1_5_FagelGamous.Data
 
                             j.HasIndex(new[] { "MainTextileid", "MainYarnmanipulationid" }, "idx_main$yarnmanipulation_textile");
 
-                            j.IndexerProperty<long>("MainYarnmanipulationid").HasColumnName("main$yarnmanipulationid");
+                            j.IndexerProperty<int>("MainYarnmanipulationid").HasColumnName("main$yarnmanipulationid");
 
-                            j.IndexerProperty<long>("MainTextileid").HasColumnName("main$textileid");
+                            j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
             });
 

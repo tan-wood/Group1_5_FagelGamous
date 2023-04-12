@@ -18,7 +18,7 @@ namespace Group1_5_FagelGamous.Data.Entities
             MainYarnmanipulations = new HashSet<Yarnmanipulation>();
         }
 
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string? Locale { get; set; }
         public int? Textileid { get; set; }
         public string? Description { get; set; }

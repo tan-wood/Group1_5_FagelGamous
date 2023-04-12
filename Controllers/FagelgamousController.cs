@@ -28,28 +28,35 @@ namespace Group1_5_FagelGamous.Controllers
         [HttpGet("getEverything")]
         public IActionResult GetEverything()
         {
-            var everything = UOW.BurialMain.Query()
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainAnalyses)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainBurialmains)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainColors)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainDecorations)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainPhotodata)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainStructures)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainTextilefunctions)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainYarnmanipulations)
-           .Include(x => x.MainTextiles).ThenInclude(x => x.MainDimensions)
-           .ToArray();
-
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true,
-                ReferenceHandler = ReferenceHandler.IgnoreCycles // Disable reference handling
-            };
+                var everything = UOW.BurialMain.Query()
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainAnalyses)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainBurialmains)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainColors)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainDecorations)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainPhotodata)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainStructures)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainTextilefunctions)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainYarnmanipulations)
+               .Include(x => x.MainTextiles).ThenInclude(x => x.MainDimensions)
+               .ToArray();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = true,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles // Disable reference handling
+                };
 
-            var json = JsonSerializer.Serialize(everything, options);
+                var json = JsonSerializer.Serialize(everything, options);
 
-            return Ok(json);
+                return Ok(json);
+
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(new JsonResult(ex.Message));
+            }
         }
 
         [HttpGet("getAllBurialMain")]
@@ -60,9 +67,9 @@ namespace Group1_5_FagelGamous.Controllers
                 var burialMain = UOW.BurialMain.GetAll().ToArray();
                 return Ok(burialMain);
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest(new JsonResult(ex.Message));
             }
         }
 
@@ -75,11 +82,37 @@ namespace Group1_5_FagelGamous.Controllers
                 UOW.Complete();
                 return Ok(textiles);
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest(new JsonResult(ex.Message));
             }
         }
+
+        [HttpGet("getAllColors")]
+        public IActionResult GetAllColors()
+        {
+            try
+            {
+                var colors = UOW.Color.GetAll().ToArray();
+                UOW.Complete();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = true,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles // Disable reference handling
+                };
+
+                var json = JsonSerializer.Serialize(colors, options);
+
+                return Ok(colors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new JsonResult(ex.Message));
+            }
+        }
+
 
         [HttpPost("createBurialMain")]
         public IActionResult CreateBurialMain([FromBody]Burialmain b)
@@ -95,6 +128,56 @@ namespace Group1_5_FagelGamous.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost("createTextile")]
+        public IActionResult CreateTextile([FromBody] Textile t)
+        {
+            try
+            {
+                if(t.MainColors != null)
+                {
+                    List<Color> x = new();
+                    foreach(var color in t.MainColors)
+                    {
+                        var colors = UOW.Color.Add(color);
+                        x.Add(colors);
+                    }
+                    t.MainColors = x;
+                }
+                var addedTextile = UOW.Textile.Add(t);
+                UOW.Complete();
+                return Ok(new JsonResult("Your textile has been added sir"));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new JsonResult(ex.Message));
+            }
+        }
+
+        [HttpPost("createColor")]
+        public IActionResult CreateColor([FromBody] Color c)
+        {
+            try
+            {
+                var addedColor = UOW.Color.Add(c);
+                UOW.Complete();
+                return Ok(addedColor);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new JsonResult(ex.Message));
+            }
+        }
+        //dimensions
+        //decoration
+        //dimensions
+        //photodatum
+        //structure
+        //analysis
+        //textilefunction
+        //yarnmanipulation
+
+
 
         [HttpDelete]
         [Route("deleteBurialMain")]
@@ -131,5 +214,7 @@ namespace Group1_5_FagelGamous.Controllers
         //update is change entity1 and change entity2 nothin in link
         // create is add entity1 and add eneity2 then add both pk in link
         // delete is delete from e1 and delete from e2 then delete the pks of each from link
+
+        //TODO: Make helper function that avoids returning cyclical stuff
     }
 }

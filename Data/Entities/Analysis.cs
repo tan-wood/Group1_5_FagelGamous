@@ -10,7 +10,7 @@ namespace Group1_5_FagelGamous.Data.Entities
             MainTextiles = new HashSet<Textile>();
         }
 
-        public long Id { get; set; }
+        public int Id { get; set; }
         public int? Analysistype { get; set; }
         public string? Doneby { get; set; }
         public int? Analysisid { get; set; }

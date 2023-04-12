@@ -5,7 +5,7 @@ namespace Group1_5_FagelGamous.Data.Entities
 {
     public partial class Photoform
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string? Area { get; set; }
         public string? Squarenorthsouth { get; set; }
         public string? Tableassociation { get; set; }
