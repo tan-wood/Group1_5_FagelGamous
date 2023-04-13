@@ -23,7 +23,7 @@ namespace Group1_5_FagelGamous.Controllers
         }
 
         [HttpGet("verifyUser")]
-        public IActionResult VerifyUser([FromBody] VerifyUserModel u)
+        public IActionResult VerifyUser([FromBody] VerifyUserDTO u)
         {
             
             try
@@ -54,8 +54,23 @@ namespace Group1_5_FagelGamous.Controllers
             }
         }
 
+
+        [HttpGet("getAllRoles")]
+        public IActionResult GetAllRoles()
+        {
+            var roles = UOW.Roles.GetAll().ToArray();
+            return Ok(roles);
+        }
+
+        [HttpGet("getAllUsers")]
+        public IActionResult GetAllUsers()
+        {
+            var users = UOW.Users.GetAll().ToArray();
+            return Ok(users);
+        }
+
         [HttpPut("editPassword")]
-        public IActionResult EditPassword([FromBody] EditUserModel u)
+        public IActionResult EditPassword([FromBody] ChangeUserPasswordDTO u)
         {
             
             //get user that has submitted the update request
@@ -93,6 +108,96 @@ namespace Group1_5_FagelGamous.Controllers
             
         }
 
+        [HttpPut("editUser")]
+        public IActionResult EditUser([FromBody] EditUserDTO e)
+        {
+            
+            try
+            {
+                //gets the "admin user"
+                var adminUser = UOW.Users.Query().Include(x => x.Role).Single(x => x.Email == e.AdminEmail);
+
+                //if they do not have the administrator role, then they cannot perform this function.
+                if (adminUser.Role.RoleName != "Administrator") return BadRequest(new JsonResult("This user is not authorized to perform this function"));
+            }
+            catch
+            {
+                // if the admin user doesnt exist, tell them
+                return BadRequest(new JsonResult("Admin does not exist"));
+            }
+           
+            // if they are authorized, then continue
+            // get the current user's information
+            var currentUserInfo = UOW.Users.GetById(e.UserId);
+
+            if (currentUserInfo == null) return BadRequest(new JsonResult("This user does not exist"));
+
+            //update this object
+            currentUserInfo.RoleId = e.UserRoleId;
+            currentUserInfo.FirstName = e.UserFirstName;
+            currentUserInfo.Email = e.UserEmail;
+
+            // try to update it
+            try
+            {
+                UOW.Users.Update(currentUserInfo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            UOW.Complete();
+            var json = Helper.DeCyclifyYoCode(currentUserInfo);
+            return Ok(json);
+            
+        }
+
+        /// <summary>
+        /// If they have access to this button, they can use it. but if not they wont. Would be done with session cookie
+        /// </summary>
+        /// <param name="u"></param>
+        /// <returns></returns>
+        [HttpPost("createUser")]
+        public IActionResult CreateUser([FromBody] NewUserDTO u)
+        {
+
+            //check to see if the password fits requirements
+            if (u.TempPassword.Length! <= 14) return BadRequest(new JsonResult("The password must be atleast 14 characters"));
+
+            //generate hash for password
+            string hash = CalculateHash(u.TempPassword);
+            User newUser = new(u.FirstName, u.Email, hash, u.RoleId);
+
+            try
+            {
+                UOW.Users.Add(newUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            UOW.Complete();
+            return Ok(newUser);
+        }
+
+        //[HttpPost("createRole")]
+        //public IActionResult CreateRole([FromBody] CreateRoleDTO r)
+        //{
+        //    Role newRole = new(r.NewRoleName);
+        //    try
+        //    {
+        //        UOW.Users.Add(newUser);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+
+        //    UOW.Complete();
+        //    return Ok(newUser);
+        //}
+
 
         public string CalculateHash(string password)
         {
@@ -110,7 +215,11 @@ namespace Group1_5_FagelGamous.Controllers
         }
 
         
-        
+        //TODO: figure out how to pass a token to the logged in admin so they can pass that back
         //TODO: figure out custom 2FA or MFA
+        //TODO: create role
+            //these should only be allowed for admins
+        
+
     }
 }
