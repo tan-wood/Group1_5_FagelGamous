@@ -5,10 +5,53 @@ namespace Group1_5_FagelGamous.Data.Entities
 {
     public partial class Burialmain
     {
-        public Burialmain()
+        public Burialmain(int id, string? squarenorthsouth, string? headdirection, string? sex, string? northsouth,
+                      string? depth, string? eastwest, string? adultsubadult, string? facebundles, string? southtohead,
+                      string? preservation, string? fieldbookpage, string? squareeastwest, string? goods, string? text,
+                      string? wrapping, string? haircolor, string? westtohead, string? samplescollected, string? area,
+                      string? burialid, string? length, string? burialnumber, string? dataexpertinitials,
+                      string? westtofeet, string? ageatdeath, string? southtofeet, string? excavationrecorder,
+                      string? photos, string? hair, string? burialmaterials, DateTime? dateofexcavation,
+                      string? fieldbookexcavationyear, string? clusternumber, string? shaftnumber)
         {
+            Id = id;
+            Squarenorthsouth = squarenorthsouth;
+            Headdirection = headdirection;
+            Sex = sex;
+            Northsouth = northsouth;
+            Depth = depth;
+            Eastwest = eastwest;
+            Adultsubadult = adultsubadult;
+            Facebundles = facebundles;
+            Southtohead = southtohead;
+            Preservation = preservation;
+            Fieldbookpage = fieldbookpage;
+            Squareeastwest = squareeastwest;
+            Goods = goods;
+            Text = text;
+            Wrapping = wrapping;
+            Haircolor = haircolor;
+            Westtohead = westtohead;
+            Samplescollected = samplescollected;
+            Area = area;
+            Burialid = burialid;
+            Length = length;
+            Burialnumber = burialnumber;
+            Dataexpertinitials = dataexpertinitials;
+            Westtofeet = westtofeet;
+            Ageatdeath = ageatdeath;
+            Southtofeet = southtofeet;
+            Excavationrecorder = excavationrecorder;
+            Photos = photos;
+            Hair = hair;
+            Burialmaterials = burialmaterials;
+            Dateofexcavation = dateofexcavation;
+            Fieldbookexcavationyear = fieldbookexcavationyear;
+            Clusternumber = clusternumber;
+            Shaftnumber = shaftnumber;
             MainTextiles = new HashSet<Textile>();
         }
+
 
         public int Id { get; set; }
         public string? Squarenorthsouth { get; set; }
@@ -47,5 +90,7 @@ namespace Group1_5_FagelGamous.Data.Entities
         public string? Shaftnumber { get; set; }
 
         public virtual ICollection<Textile> MainTextiles { get; set; }
+
+
     }
 }

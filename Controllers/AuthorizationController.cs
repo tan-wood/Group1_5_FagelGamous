@@ -217,8 +217,7 @@ namespace Group1_5_FagelGamous.Controllers
         
         //TODO: figure out how to pass a token to the logged in admin so they can pass that back
         //TODO: figure out custom 2FA or MFA
-        //TODO: create role
-            //these should only be allowed for admins
+       
         
 
     }

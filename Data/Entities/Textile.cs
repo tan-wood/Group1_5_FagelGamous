@@ -5,8 +5,18 @@ namespace Group1_5_FagelGamous.Data.Entities
 {
     public partial class Textile
     {
-        public Textile()
+
+        public Textile(int id, string? locale, int? textileid, string? description, string? burialnumber, string? estimatedperiod, DateTime? sampledate, DateTime? photographeddate, string? direction)
         {
+            Id = id;
+            Locale = locale;
+            Textileid = textileid;
+            Description = description;
+            Burialnumber = burialnumber;
+            Estimatedperiod = estimatedperiod;
+            Sampledate = sampledate;
+            Photographeddate = photographeddate;
+            Direction = direction;
             MainAnalyses = new HashSet<Analysis>();
             MainBurialmains = new HashSet<Burialmain>();
             MainColors = new HashSet<Color>();
@@ -17,6 +27,7 @@ namespace Group1_5_FagelGamous.Data.Entities
             MainTextilefunctions = new HashSet<Textilefunction>();
             MainYarnmanipulations = new HashSet<Yarnmanipulation>();
         }
+
 
         public int Id { get; set; }
         public string? Locale { get; set; }

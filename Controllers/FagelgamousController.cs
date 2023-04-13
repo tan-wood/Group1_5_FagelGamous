@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Reflection.Metadata.Ecma335;
 using Group1_5_FagelGamous.Infrastructure;
 using System.Diagnostics;
+using Group1_5_FagelGamous.Data.DTO.Authentication;
 
 namespace Group1_5_FagelGamous.Controllers
 {
@@ -153,38 +154,41 @@ namespace Group1_5_FagelGamous.Controllers
 
 
         [HttpPost("createBurialMain")]
-        public IActionResult CreateBurialMain([FromBody]Burialmain b)
+        public IActionResult CreateBurialMain([FromBody]BurialMainDTO b)
         {
             try
             {
-                if(b.MainTextiles != null)
-                {
-                    IEnumerable<Textile> text= UOW.Textile.AddRange(b.MainTextiles);
-                    b.MainTextiles = (ICollection<Textile>)text;
-                }
-                var addedBurialMain = UOW.BurialMain.Add(b);
+                //if(b.MainTextiles != null)
+                //{
+                //    IEnumerable<Textile> text= UOW.Textile.AddRange(b.MainTextiles);
+                //    b.MainTextiles = (ICollection<Textile>)text;
+                //}
+                Burialmain newBurialMain = new(b.Id, b.Squarenorthsouth, b.Headdirection, b.Sex, b.Northsouth, b.Depth, b.Eastwest, b.Adultsubadult, b.Facebundles, b.Southtohead, b.Preservation, b.Fieldbookpage, b.Squareeastwest, b.Goods,
+                    b.Text, b.Wrapping, b.Haircolor, b.Westtohead, b.Samplescollected, b.Area, b.Burialid, b.Length, b.Burialnumber, b.Dataexpertinitials, b.Westtofeet, b.Ageatdeath, b.Southtofeet,
+                    b.Excavationrecorder, b.Photos, b.Hair, b.Burialmaterials, b.Dateofexcavation, b.Fieldbookexcavationyear, b.Clusternumber, b.Shaftnumber);
+
+                var addedBurialMain = UOW.BurialMain.Add(newBurialMain);
                 UOW.Complete();
                 var json = Helper.DeCyclifyYoCode(addedBurialMain);
                 return Ok(json);
             }
-            catch
+            catch(Exception ex) 
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost("createTextile")]
-        public IActionResult CreateTextile([FromBody] Textile t)
+        public IActionResult CreateTextile([FromBody] TextileDTO t)
         {
             try
             {
-                //This goes through the process of determining if we need to add the sub portions of a textile
-                t = Helper.TextileBuilder(t);
-
-                var addedTextile = UOW.Textile.Add(t);
+                ////This goes through the process of determining if we need to add the sub portions of a textile
+                //t = Helper.TextileBuilder(t);
+                Textile newTextile = new(t.Id, t.Locale, t.Textileid, t.Description, t.Burialnumber, t.Estimatedperiod, t.Sampledate, t.Photographeddate, t.Direction);
+                var addedTextile = UOW.Textile.Add(newTextile);
                 UOW.Complete();
-                var json = Helper.DeCyclifyYoCode(addedTextile);
-                return Ok(json);
+                return Ok(addedTextile);
             }
             catch(Exception ex)
             {
@@ -236,42 +240,47 @@ namespace Group1_5_FagelGamous.Controllers
 
         [HttpPut]
         [Route("updateBurialMain")]
-        public IActionResult UpdateBurialMain([FromBody] Burialmain b)
+        public IActionResult UpdateBurialMain([FromBody] BurialMainDTO b)
         {
             try
             {
                 //if there are textiles in this burial main
-                if (b.MainTextiles != null)
-                {
-                    //build a new list that will hold the newly created/ updated textiles
-                    List<Textile> x = new();
-                    foreach (var textile in b.MainTextiles)
-                    {
-                        //if the textile id is not yet created (the id is set to 0 initially)
-                        if (textile.Id == 0)
-                        {
-                            //Since this is a brand new textile, we need to go through the same process as when we created a textile and add its sub components
-                            Textile tNew = Helper.TextileBuilder(textile);
-                            //then go and add this textile to the textile table
-                            var added = UOW.Textile.Add(tNew);
-                            //Then add it to the overall list
-                            x.Add(added);
-                        }
-                        //if the textile does exist already(meaning there is a textile id)
-                        else
-                        {
-                            //then update that textile with the current one
-                            UOW.Textile.Update(textile);
-                            //Add this textile back to the maintextiles
-                            x.Add(textile);
-                        }
-                    }
-                    b.MainTextiles = x;
-                }
-                var updatedBurialMain = UOW.BurialMain.Update(b);
+                //if (b.MainTextiles != null)
+                //{
+                //    //build a new list that will hold the newly created/ updated textiles
+                //    List<Textile> x = new();
+                //    foreach (var textile in b.MainTextiles)
+                //    {
+                //        //if the textile id is not yet created (the id is set to 0 initially)
+                //        if (textile.Id == 0)
+                //        {
+                //            //Since this is a brand new textile, we need to go through the same process as when we created a textile and add its sub components
+                //            Textile tNew = Helper.TextileBuilder(textile);
+                //            //then go and add this textile to the textile table
+                //            var added = UOW.Textile.Add(tNew);
+                //            //Then add it to the overall list
+                //            x.Add(added);
+                //        }
+                //        //if the textile does exist already(meaning there is a textile id)
+                //        else
+                //        {
+                //            //then update that textile with the current one
+                //            UOW.Textile.Update(textile);
+                //            //Add this textile back to the maintextiles
+                //            x.Add(textile);
+                //        }
+                //    }
+                //    b.MainTextiles = x;
+                //}
+
+                Burialmain BurialMain = new(b.Id, b.Squarenorthsouth, b.Headdirection, b.Sex, b.Northsouth, b.Depth, b.Eastwest, b.Adultsubadult, b.Facebundles, b.Southtohead, b.Preservation, b.Fieldbookpage, b.Squareeastwest, b.Goods,
+                    b.Text, b.Wrapping, b.Haircolor, b.Westtohead, b.Samplescollected, b.Area, b.Burialid, b.Length, b.Burialnumber, b.Dataexpertinitials, b.Westtofeet, b.Ageatdeath, b.Southtofeet,
+                    b.Excavationrecorder, b.Photos, b.Hair, b.Burialmaterials, b.Dateofexcavation, b.Fieldbookexcavationyear, b.Clusternumber, b.Shaftnumber);
+
+                var updatedBurialMain = UOW.BurialMain.Update(BurialMain);
                 UOW.Complete();
-                var json = Helper.DeCyclifyYoCode(updatedBurialMain);
-                return Ok();
+
+                return Ok("Your burial has been updated");
             }
             catch(Exception ex)
             {
@@ -281,14 +290,14 @@ namespace Group1_5_FagelGamous.Controllers
         }
 
         [HttpPut("updateTextile")]
-        public IActionResult UpdateTextile([FromBody] Textile t)
+        public IActionResult UpdateTextile([FromBody] TextileDTO t)
         {
             try
             {
-                //resetting the object t with all the updated/created subportions
-                t = Helper.TextileBuilder(t);
-
-                UOW.Textile.Update(t);
+                ////resetting the object t with all the updated/created subportions
+                //t = Helper.TextileBuilder(t);
+                Textile toUpdateTextile = new(t.Id, t.Locale, t.Textileid, t.Description, t.Burialnumber, t.Estimatedperiod, t.Sampledate, t.Photographeddate, t.Direction);
+                UOW.Textile.Update(toUpdateTextile);
                 UOW.Complete();
                 return Ok(new JsonResult("Your textile has been updated"));
             }
@@ -297,10 +306,6 @@ namespace Group1_5_FagelGamous.Controllers
                 return BadRequest(new JsonResult(ex.Message));
             }
         }
-
-        //TODO: FIX CRAPY burial main update
-        //TODO: update for textile
-
 
     }
 }
