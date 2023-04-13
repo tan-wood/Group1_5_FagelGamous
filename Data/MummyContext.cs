@@ -24,10 +24,12 @@ namespace Group1_5_FagelGamous.Data
         public virtual DbSet<Dimension> Dimensions { get; set; } = null!;
         public virtual DbSet<Photodatum> Photodata { get; set; } = null!;
         public virtual DbSet<Photoform> Photoforms { get; set; } = null!;
+        public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Structure> Structures { get; set; } = null!;
         public virtual DbSet<Teammember> Teammembers { get; set; } = null!;
         public virtual DbSet<Textile> Textiles { get; set; } = null!;
         public virtual DbSet<Textilefunction> Textilefunctions { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Yarnmanipulation> Yarnmanipulations { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -449,6 +451,19 @@ namespace Group1_5_FagelGamous.Data
                     .HasColumnName("tableassociation");
             });
 
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("roles");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.RoleName)
+                    .HasMaxLength(20)
+                    .HasColumnName("role_name");
+            });
+
             modelBuilder.Entity<Structure>(entity =>
             {
                 entity.ToTable("structure");
@@ -574,6 +589,38 @@ namespace Group1_5_FagelGamous.Data
 
                             j.IndexerProperty<int>("MainTextileid").HasColumnName("main$textileid");
                         });
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("users");
+
+                entity.HasIndex(e => e.Email, "unique_email")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(30)
+                    .HasColumnName("email");
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(20)
+                    .HasColumnName("first_name");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(200)
+                    .HasColumnName("password");
+
+                entity.Property(e => e.RoleId).HasColumnName("role_id");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_roles");
             });
 
             modelBuilder.Entity<Yarnmanipulation>(entity =>

@@ -26,6 +26,8 @@ namespace Group1_5_FagelGamous.Data.UnitOfWork
                 YarnManipulation = new YarnManipulationRepository(Context);
                 Analysis = new AnalysisRepository(Context);
                 Burialmain = new BurialMainRepository(Context);
+                Users = new UserRepository(Context);
+                Roles = new RolesRepository(Context);
             }
 
             public IRepository<Burialmain> BurialMain { get; private set; }
@@ -54,8 +56,11 @@ namespace Group1_5_FagelGamous.Data.UnitOfWork
 
             public IRepository<Burialmain> Burialmain { get; private set; }
 
+            public IRepository<User> Users { get; private set; }
 
-            public int Complete()
+            public IRepository<Role> Roles { get; private set; }
+
+        public int Complete()
         {
             return Context.SaveChanges();
         }

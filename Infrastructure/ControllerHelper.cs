@@ -6,11 +6,11 @@ using Group1_5_FagelGamous.Data;
 
 namespace Group1_5_FagelGamous.Infrastructure
 {
-    public class FagelgamousControllerHelper
+    public class ControllerHelper
     {
         private IUnitOfWork UOW { get; set; }
 
-        public FagelgamousControllerHelper(IUnitOfWork uow)
+        public ControllerHelper(IUnitOfWork uow)
         {
             UOW = uow;
         }

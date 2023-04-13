@@ -8,6 +8,8 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Group1_5_FagelGamous.Data.UnitOfWork;
 using System.Text;
+using System.Security.Principal;
+using Group1_5_FagelGamous.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,8 @@ string connectionString = builder.Configuration.GetConnectionString("MyMummyDbCo
 builder.Services.AddDbContext<MummyContext>(x => x.UseNpgsql(connectionString));
 
 builder.Services.AddAuthorization();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 //region Repositories
 builder.Services.AddScoped<IRepository<Analysis>, AnalysisRepository>();
@@ -51,13 +55,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 app.UseCors(x => x.WithOrigins("http://localhost:3000"));
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

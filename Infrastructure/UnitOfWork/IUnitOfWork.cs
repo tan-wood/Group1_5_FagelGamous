@@ -1,6 +1,5 @@
 ﻿using Group1_5_FagelGamous.Data.Entities;
 using Group1_5_FagelGamous.Infrastructure.Repositories;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Group1_5_FagelGamous.Data.UnitOfWork
 {
@@ -18,6 +17,8 @@ namespace Group1_5_FagelGamous.Data.UnitOfWork
             IRepository<Textile> Textile { get; }
             IRepository<Textilefunction> TextileFunction { get; }
             IRepository<Yarnmanipulation> YarnManipulation { get; }
+            IRepository<User> Users { get; }
+            IRepository<Role> Roles { get; }
             int Complete();
         
 

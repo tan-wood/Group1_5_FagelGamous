@@ -22,11 +22,11 @@ namespace Group1_5_FagelGamous.Controllers
     public class FagelgamousController : ControllerBase
     {
         private readonly IUnitOfWork UOW;
-        private readonly FagelgamousControllerHelper Helper;
+        private readonly ControllerHelper Helper;
         public FagelgamousController(IUnitOfWork unitOfWork) 
         { 
             UOW= unitOfWork;
-            Helper = new FagelgamousControllerHelper(UOW);
+            Helper = new ControllerHelper(UOW);
         }
 
         [HttpGet("getEverything")]
@@ -300,7 +300,6 @@ namespace Group1_5_FagelGamous.Controllers
 
         //TODO: FIX CRAPY burial main update
         //TODO: update for textile
-        //TODO: SECURITY 
 
 
     }
