@@ -181,22 +181,22 @@ namespace Group1_5_FagelGamous.Controllers
             return Ok(newUser);
         }
 
-        //[HttpPost("createRole")]
-        //public IActionResult CreateRole([FromBody] CreateRoleDTO r)
-        //{
-        //    Role newRole = new(r.NewRoleName);
-        //    try
-        //    {
-        //        UOW.Users.Add(newUser);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
+        [HttpPost("createRole")]
+        public IActionResult CreateRole([FromBody] CreateRoleDTO r)
+        {
+            Role newRole = new(r.NewRoleName);
+            try
+            {
+                UOW.Roles.Add(newRole);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-        //    UOW.Complete();
-        //    return Ok(newUser);
-        //}
+            UOW.Complete();
+            return Ok(newRole);
+        }
 
 
         public string CalculateHash(string password)
