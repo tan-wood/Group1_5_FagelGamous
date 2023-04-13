@@ -65,8 +65,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainAnalyses)
                     .UsingEntity<Dictionary<string, object>>(
                         "AnalysisTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_textile"),
-                        r => r.HasOne<Analysis>().WithMany().HasForeignKey("MainAnalysisid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_analysis"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("fk_textile"),
+                        r => r.HasOne<Analysis>().WithMany().HasForeignKey("MainAnalysisid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("Fk_analysis"),
                         j =>
                         {
                             j.HasKey("MainAnalysisid", "MainTextileid").HasName("main$analysis_textile_pkey");
@@ -228,8 +228,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainBurialmains)
                     .UsingEntity<Dictionary<string, object>>(
                         "BurialmainTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Burialmain>().WithMany().HasForeignKey("MainBurialmainid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_burial"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("Fk_textile"),
+                        r => r.HasOne<Burialmain>().WithMany().HasForeignKey("MainBurialmainid").HasConstraintName("Fk_burial"),
                         j =>
                         {
                             j.HasKey("MainBurialmainid", "MainTextileid").HasName("main$burialmain_textile_pkey");
@@ -263,8 +263,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainColors)
                     .UsingEntity<Dictionary<string, object>>(
                         "ColorTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Color>().WithMany().HasForeignKey("MainColorid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_color"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("Fk_textile"),
+                        r => r.HasOne<Color>().WithMany().HasForeignKey("MainColorid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("Fk_color"),
                         j =>
                         {
                             j.HasKey("MainColorid", "MainTextileid").HasName("main$color_textile_pkey");
@@ -298,8 +298,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainDecorations)
                     .UsingEntity<Dictionary<string, object>>(
                         "DecorationTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Decoration>().WithMany().HasForeignKey("MainDecorationid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_decoration"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("Fk_textile"),
+                        r => r.HasOne<Decoration>().WithMany().HasForeignKey("MainDecorationid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("Fk_decoration"),
                         j =>
                         {
                             j.HasKey("MainDecorationid", "MainTextileid").HasName("main$decoration_textile_pkey");
@@ -337,8 +337,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainDimensions)
                     .UsingEntity<Dictionary<string, object>>(
                         "DimensionTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Dimension>().WithMany().HasForeignKey("MainDimensionid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_dimension"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("Fk_textile"),
+                        r => r.HasOne<Dimension>().WithMany().HasForeignKey("MainDimensionid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("Fk_dimension"),
                         j =>
                         {
                             j.HasKey("MainDimensionid", "MainTextileid").HasName("main$dimension_textile_pkey");
@@ -384,8 +384,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainPhotodata)
                     .UsingEntity<Dictionary<string, object>>(
                         "PhotodataTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Photodatum>().WithMany().HasForeignKey("MainPhotodataid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_photodata"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("fk_textile"),
+                        r => r.HasOne<Photodatum>().WithMany().HasForeignKey("MainPhotodataid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("fk_photodata"),
                         j =>
                         {
                             j.HasKey("MainPhotodataid", "MainTextileid").HasName("main$photodata_textile_pkey");
@@ -468,8 +468,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainStructures)
                     .UsingEntity<Dictionary<string, object>>(
                         "StructureTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Structure>().WithMany().HasForeignKey("MainStructureid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_structure"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("fk_textile"),
+                        r => r.HasOne<Structure>().WithMany().HasForeignKey("MainStructureid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("fk_structure"),
                         j =>
                         {
                             j.HasKey("MainStructureid", "MainTextileid").HasName("main$structure_textile_pkey");
@@ -560,8 +560,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainTextilefunctions)
                     .UsingEntity<Dictionary<string, object>>(
                         "TextilefunctionTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Textilefunction>().WithMany().HasForeignKey("MainTextilefunctionid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textilefunction"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("fk_textile"),
+                        r => r.HasOne<Textilefunction>().WithMany().HasForeignKey("MainTextilefunctionid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("fk_textilefunction"),
                         j =>
                         {
                             j.HasKey("MainTextilefunctionid", "MainTextileid").HasName("main$textilefunction_textile_pkey");
@@ -623,8 +623,8 @@ namespace Group1_5_FagelGamous.Data
                     .WithMany(p => p.MainYarnmanipulations)
                     .UsingEntity<Dictionary<string, object>>(
                         "YarnmanipulationTextile",
-                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_textile"),
-                        r => r.HasOne<Yarnmanipulation>().WithMany().HasForeignKey("MainYarnmanipulationid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_yarnmanipulation"),
+                        l => l.HasOne<Textile>().WithMany().HasForeignKey("MainTextileid").HasConstraintName("fk_textile"),
+                        r => r.HasOne<Yarnmanipulation>().WithMany().HasForeignKey("MainYarnmanipulationid").OnDelete(DeleteBehavior.SetNull).HasConstraintName("fk_yarnmanipulation"),
                         j =>
                         {
                             j.HasKey("MainYarnmanipulationid", "MainTextileid").HasName("main$yarnmanipulation_textile_pkey");

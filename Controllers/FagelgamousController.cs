@@ -78,7 +78,15 @@ namespace Group1_5_FagelGamous.Controllers
             {
                 var burialMain = UOW.BurialMain.Query()
                     .Where(x => x.Id == id)
-                    .Include(x=>x.MainTextiles)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainAnalyses)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainBurialmains)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainColors)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainDecorations)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainPhotodata)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainStructures)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainTextilefunctions)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainYarnmanipulations)
+                    .Include(x => x.MainTextiles).ThenInclude(x => x.MainDimensions)
                     .ToArray();
 
                 var json = Helper.DeCyclifyYoCode(burialMain);
@@ -95,11 +103,49 @@ namespace Group1_5_FagelGamous.Controllers
         {
             try
             {
-                var textiles = UOW.Textile.GetAll().ToArray();
-                UOW.Complete();
-                return Ok(textiles);
+                var textiles = UOW.Textile.Query()
+                    .Include(x=>x.MainTextilefunctions)
+                    .Include(x=>x.MainStructures)
+                    .Include(x=>x.MainYarnmanipulations)
+                    .Include(x=>x.MainAnalyses)
+                    .Include(x=>x.MainBurialmains)
+                    .Include(x=>x.MainColors)
+                    .Include(x=>x.MainDecorations)
+                    .Include(x=>x.MainPhotodata)
+                    .Include(x=>x.MainDimensions)
+                    .ToArray();
+                var json = Helper.DeCyclifyYoCode(textiles);
+                
+                return Ok(json);
             }
             catch(Exception ex)
+            {
+                return BadRequest(new JsonResult(ex.Message));
+            }
+        }
+
+        [HttpGet("getSingleTextile/{id}")]
+        public IActionResult GetSingleTextiles(int id)
+        {
+            try
+            {
+                var textiles = UOW.Textile.Query()
+                    .Where(x=> x.Id == id)
+                    .Include(x => x.MainTextilefunctions)
+                    .Include(x => x.MainStructures)
+                    .Include(x => x.MainYarnmanipulations)
+                    .Include(x => x.MainAnalyses)
+                    .Include(x => x.MainBurialmains)
+                    .Include(x => x.MainColors)
+                    .Include(x => x.MainDecorations)
+                    .Include(x => x.MainPhotodata)
+                    .Include(x => x.MainDimensions)
+                    .ToArray();
+                var json = Helper.DeCyclifyYoCode(textiles);
+
+                return Ok(json);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new JsonResult(ex.Message));
             }
@@ -155,7 +201,8 @@ namespace Group1_5_FagelGamous.Controllers
 
                 var addedTextile = UOW.Textile.Add(t);
                 UOW.Complete();
-                return Ok(new JsonResult("Your textile has been added"));
+                var json = Helper.DeCyclifyYoCode(addedTextile);
+                return Ok(json);
             }
             catch(Exception ex)
             {
@@ -179,6 +226,27 @@ namespace Group1_5_FagelGamous.Controllers
                 return new JsonResult("It worked and is deleted");
             }
             catch(Exception ex )
+            {
+                return BadRequest(new JsonResult($"Bad request: {ex.Message}"));
+            }
+        }
+
+        [HttpDelete]
+        [Route("deleteTextile")]
+        public IActionResult DeleteTextile(int id)
+        {
+            try
+            {
+                var textile = UOW.Textile.GetById(id);
+                if (textile == null)
+                {
+                    return BadRequest(new JsonResult("This is null"));
+                }
+                UOW.Textile.Remove(textile);
+                UOW.Complete();
+                return new JsonResult("It worked and is deleted");
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new JsonResult($"Bad request: {ex.Message}"));
             }
@@ -248,10 +316,8 @@ namespace Group1_5_FagelGamous.Controllers
             }
         }
 
-        //TODO: If it is not working, then check your connection strings
         //TODO: FIX CRAPY burial main update
         //TODO: update for textile
-        //TODO: delete textile
         //TODO: SECURITY 
 
 
