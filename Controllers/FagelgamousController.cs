@@ -151,24 +151,6 @@ namespace Group1_5_FagelGamous.Controllers
             }
         }
 
-        [HttpGet("getAllColors")]
-        public IActionResult GetAllColors()
-        {
-            try
-            {
-                var colors = UOW.Color.GetAll().ToArray();
-                UOW.Complete();
-
-                var json = Helper.DeCyclifyYoCode(colors);
-
-                return Ok(colors);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new JsonResult(ex.Message));
-            }
-        }
-
 
         [HttpPost("createBurialMain")]
         public IActionResult CreateBurialMain([FromBody]Burialmain b)
