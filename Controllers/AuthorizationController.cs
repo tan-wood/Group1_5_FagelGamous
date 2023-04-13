@@ -65,8 +65,9 @@ namespace Group1_5_FagelGamous.Controllers
         [HttpGet("getAllUsers")]
         public IActionResult GetAllUsers()
         {
-            var users = UOW.Users.GetAll().ToArray();
-            return Ok(users);
+            var users = UOW.Users.Query().Include(x=>x.Role).ToArray();
+            var json = Helper.DeCyclifyYoCode(users);
+            return Ok(json);
         }
 
         [HttpPut("editPassword")]
