@@ -63,11 +63,13 @@ app.UseHttpsRedirection();
 if(app.Environment.IsDevelopment())
 {
     app.UseCors(x => x.WithOrigins("http://localhost:3000"));
+    app.UseCors(x => x.WithOrigins("*"));
 }
 //else, accept them from the real website
 else
 {
     app.UseCors(x => x.WithOrigins("https://group1-5intexfrontendreactforreal.is404.net"));
+    app.UseCors(x => x.WithOrigins("*"));
 }
 
 app.UseAuthentication();
