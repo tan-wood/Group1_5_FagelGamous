@@ -22,7 +22,7 @@ namespace Group1_5_FagelGamous.Controllers
             Helper = new ControllerHelper(UOW);
         }
 
-        [HttpGet("verifyUser")]
+        [HttpPost("verifyUser")]
         public IActionResult VerifyUser([FromBody] VerifyUserDTO u)
         {
             

@@ -20,8 +20,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connectionString = builder.Configuration.GetConnectionString("MyMummyDbConn");
-builder.Services.AddDbContext<MummyContext>(x => x.UseNpgsql(connectionString));
+string? connectionString = Environment.GetEnvironmentVariable("DB_CONN");
+ 
+
+builder.Services.AddDbContext<MummyContext>(x => x.UseNpgsql(connectionString!));
 
 builder.Services.AddAuthorization();
 builder.Services.AddDistributedMemoryCache();
@@ -62,13 +64,13 @@ app.UseHttpsRedirection();
 //if its development, accept requests from local host
 if(app.Environment.IsDevelopment())
 {
-    app.UseCors(x => x.WithOrigins("http://localhost:3000"));
+    //app.UseCors(x => x.WithOrigins("http://localhost:3000"));
     app.UseCors(x => x.WithOrigins("*"));
 }
 //else, accept them from the real website
 else
 {
-    app.UseCors(x => x.WithOrigins("https://group1-5intexfrontendreactforreal.is404.net"));
+    //app.UseCors(x => x.WithOrigins("https://group1-5intexfrontendreactforreal.is404.net"));
     app.UseCors(x => x.WithOrigins("*"));
 }
 
