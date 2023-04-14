@@ -10,6 +10,7 @@ using Group1_5_FagelGamous.Data.UnitOfWork;
 using System.Text;
 using System.Security.Principal;
 using Group1_5_FagelGamous.Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,6 @@ builder.Services.AddScoped<IRepository<Dimension>, DimensionRepository>();
 builder.Services.AddCors();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,7 +59,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(x => x.WithOrigins("http://localhost:3000"));
+//if its development, accept requests from local host
+if(app.Environment.IsDevelopment())
+{
+    app.UseCors(x => x.WithOrigins("http://localhost:3000"));
+}
+//else, accept them from the real website
+else
+{
+    app.UseCors(x => x.WithOrigins("https://group1-5intexfrontendreactforreal.is404.net"));
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

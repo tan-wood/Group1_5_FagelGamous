@@ -65,7 +65,7 @@ namespace Group1_5_FagelGamous.Controllers
         [HttpGet("getAllUsers")]
         public IActionResult GetAllUsers()
         {
-            var users = UOW.Users.Query().Include(x=>x.Role).ToArray();
+            var users = UOW.Users.Query().ToArray();
             var json = Helper.DeCyclifyYoCode(users);
             return Ok(json);
         }
@@ -81,7 +81,6 @@ namespace Group1_5_FagelGamous.Controllers
             //verify the user has the current password
             if(userToUpdate.Password != u.CurrentPassword) return BadRequest(new JsonResult("The password is not correct"));
 
-            Console.WriteLine(userToUpdate.Role.RoleName);
 
             //verify that they have access to edit
             if (userToUpdate.Role.RoleName == null) return BadRequest(new JsonResult("You do not have access to edit this"));
